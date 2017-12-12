@@ -1,4 +1,4 @@
-React 2.0
+# React 2.0
 
 Topics:
 - Boilerplates [create-react-app](https://github.com/facebookincubator/create-react-app)
@@ -20,6 +20,7 @@ Topics:
 	- SVGs & Canvas
 	- Server-side Rendering
 		- SEO
+	- Reusable Components
 - React Ecosystem
 	- React Native (Mobile)
 	- State Management (flux, redux, mobx)
@@ -31,6 +32,10 @@ Topics:
 	- Styling
 	- APIs (fetch, axios)
 - Getting your app to Production
+
+## Description
+
+Using React to Build Scalable and Progressive Web Applications
 
 ### Examples
 
