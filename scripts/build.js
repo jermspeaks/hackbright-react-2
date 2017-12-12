@@ -31,31 +31,12 @@ const SubjectsDir = path.join(RootDir, "subjects")
 
 const Subjects = {
   HelloWorld: "Hello World",
-  // Rendering: "Rendering",
-  // Components: "Components",
-  // PropsVsState: "Props vs. State",
   // ImperativeToDeclarative: "Imperative to Declarative",
-  // Forms: "Forms",
-  // Testing: "Testing",
-  // CompoundComponents: "Compound Components",
-  // Context: "Context",
+  CompoundComponents: "Compound Components",
   // HigherOrderComponents: "Higher Order Components",
   // RenderProps: "Render Props",
-  // RenderOptimizations: "Render Optimizations",
-  // TweenState: "TweenState",
-  // Animation: "Animation",
   // Routing: "Routing",
-  // ServerRendering: "Server Rendering",
-  // JSONTable: "JSON Table",
-  // Select: "Select",
-  // Slider: "Slider",
-  // Calculator: "Calculator",
-  // ChatApp: "Chat App",
-  // Cursors: "Cursors",
-  // MigratingToReact: "Migrating to React",
-  // Redux: "Redux",
-  // MiniRedux: "Mini Redux",
-  // MiniRouter: "Mini Router"
+  Redux: "Redux"
 }
 
 const SubjectDirNames = Object.keys(Subjects)

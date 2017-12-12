@@ -420,19 +420,22 @@ app.directive("toggler", () => {
 
 ## Resources
 
-https://egghead.io/browse/frameworks/react
+- [Ryan Florence - Compound Components](https://www.youtube.com/watch?v=hEGg-3pIHlE)
+- [Michael Jackson - Never Write Another HoC](https://www.youtube.com/watch?v=BcVAq3YFiuc)
+- [Dan Abramov - Live React: Hot Reloading with Time Travel at react-europe 2015](https://www.youtube.com/watch?v=xsSnOQynTHs)
 
-http://fellowship.hackbrightacademy.com/materials/lectures/react/
-http://fellowship.hackbrightacademy.com/materials/lectures/
+- [Hackbright React Lecture](http://fellowship.hackbrightacademy.com/materials/lectures/react/)
 
-https://github.com/enaqx/awesome-react
-https://github.com/facebookincubator/create-react-app
-https://egghead.io/technologies/vue
+- https://egghead.io/browse/frameworks/react
 
-https://developers.google.com/web/progressive-web-apps/
-https://addyosmani.com/blog/getting-started-with-progressive-web-apps/
-https://blog.hnpwa.com/hacker-news-progressive-web-apps-2d8cbf7bc077
-https://github.com/tastejs/hacker-news-pwas#specification
+- https://github.com/enaqx/awesome-react
+- https://github.com/facebookincubator/create-react-app
+- https://egghead.io/technologies/vue
 
-https://hnpwa.com/
-https://github.com/kristoferbaxter/react-hn
+- https://developers.google.com/web/progressive-web-apps/
+- https://addyosmani.com/blog/getting-started-with-progressive-web-apps/
+- https://blog.hnpwa.com/hacker-news-progressive-web-apps-2d8cbf7bc077
+- https://github.com/tastejs/hacker-news-pwas#specification
+
+- https://hnpwa.com/
+- https://github.com/kristoferbaxter/react-hn
