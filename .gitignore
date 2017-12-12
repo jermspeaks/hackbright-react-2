@@ -63,3 +63,10 @@ typings/
 
 
 # End of https://www.gitignore.io/api/node
+
+subjects/index.html
+subjects/**/lecture.html
+subjects/**/exercise.html
+subjects/**/solution.html
+!subjects/**/backbone-todomvc/index.html
+node_modules

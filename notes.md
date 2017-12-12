@@ -2,17 +2,24 @@
 
 ## Intro
 
-You have a little familiarity with React.
-You are exposed to React's declarative structure.
-You want to learn more.
-
 ### What we will cover:
-- Boilerplate
-- React Techniques
-- Routing
+
+- Why React, Part 2
+- Boilerplate Overview
+- Compound Components
 - Redux
 
-### What we will not cover:
-- React Native
-- Testing
-- Build Tools
+## Why React, Part 2
+
+What was front-end development like before React?
+
+Let’s go over a history of front-end libraries exploring…
+
+- jQuery
+- Backbone
+- Angular
+
+[Demo link](http://localhost:8080/HelloWorld/lecture.html)
+
+```js
+```
