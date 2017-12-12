@@ -839,7 +839,7 @@ A really awesome library that does this is react-soundplayer
 
 ## Redux
 
-- REdux is an architecture, not a framework
+- Redux is an architecture, not a framework
   - DO NOT START BUILDING STUFF WITH REDUX WHEN YOU'RE FIRST GETTING STARTED WITH REACT
   - It can be difficult to understand why the patterns in Redux are useful if you haven't
     already tried to solve problems w/out Redux
