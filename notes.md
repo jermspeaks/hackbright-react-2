@@ -5,7 +5,7 @@
 ### What we will cover:
 
 - Why React, Part 2
-- Boilerplate Overview
+- Create React App
 - Compound Components
 - Redux
 
@@ -402,6 +402,21 @@ app.directive("toggler", () => {
 > of it.
   https://twitter.com/teozaurus/status/518071391959388160
 
+
+## Create React App
+
+> You don’t need to install or configure tools like Webpack or Babel.
+>
+> They are preconfigured and hidden so that you can focus on the code.
+>
+> Just create a project, and you’re good to go.
+>
+> -- From create-react-app library README
+
+
+## Compound Components
+
+## Redux
 
 ## Resources
 
