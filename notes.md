@@ -111,7 +111,171 @@ $("#descending").on("click", event => { // <-- state change
 
 ### Backbone
 
+```js
+import Backbone from "backbone"
+import $ from "jquery"
+import _ from "underscore"
+import { search } from "./utils/searchWikipedia"
 
+const appTemplate = _.template(`
+<div>
+	<h1><%= title %></h1>
+	<form id="form">
+		<input id="input" value="bootcamp"/>
+		<button type="submit">Search</button>
+	</form>
+	<% if (loading) { %>
+		<div id="loading">Loading...</div>
+	<% } else { %>
+		<div id="meta">
+			<p>Results for: <span id="title"><%= term %></span><p>
+			<p>
+				<label>
+					<input type="checkbox" id="descending" <%= descending ? 'checked' : '' %>>
+					Sort Descending
+				</label>
+			</p>
+		</div>
+	<% } %>
+	<ul id="results">
+		<% results.forEach(function(result) { %>
+			<li class="toggleView"></li>
+		<% }) %>
+	</ul>
+</div>
+`)
+
+const AppView = Backbone.View.extend({
+	template: appTemplate,
+
+	events: {
+		// <-- delegated state changes
+		"submit #form": "handleSubmit",
+		"click #descending": "handleDescending"
+	},
+
+	initialize() {
+		this.listenTo(this.model, "all", this.render)
+		this.listenTo(this.model, "change:term", this.search)
+		this.render()
+		this.search()
+	},
+
+	handleSubmit(event) {
+		event.preventDefault()
+		this.model.set("term", this.$el.find("#input").val()) // KVO Web
+	},
+
+	search() {
+		this.model.set({
+			// KVO web
+			loading: true,
+			results: [],
+			descending: false // cascading update!
+		})
+		search(this.model.get("term"), (err, results) => {
+			this.model.set({
+				// KVO web
+				loading: false,
+				results: results
+			})
+		})
+	},
+
+	handleDescending() {
+		this.model.set(
+			// <-- KVO web
+			"descending",
+			!this.model.get("descending")
+		)
+	},
+
+	render() {
+		const state = this.model.toJSON()
+		if (state.descending)
+			state.results = state.results.slice(0).reverse()
+		this.$el.html(this.template(state)) // DOM Bomb!
+		this.$el.find("#results li").each((index, el) => {
+			new ToggleView({
+				// <-- imperative (re)composition!
+				el: el,
+				model: new Backbone.Model(state.results[index])
+			}).render()
+		})
+	}
+})
+
+const ToggleView = Backbone.View.extend({
+	template: _.template(`
+<div>
+	<%= title %>
+	<button>show more</button>
+</div>
+<% if (isOpen) { %>
+	<div>
+		<p><%= description %></p>
+	</div>
+<% } %>
+`),
+
+	events: {
+		"click button": "toggle"
+	},
+
+	initialize() {
+		this.model.set("isOpen", false, { silent: true }) // <-- model ownership?
+		this.listenTo(this.model, "change:isOpen", this.render)
+	},
+
+	toggle() {
+		this.model.set("isOpen", !this.model.get("isOpen")) // <-- KVO web
+	},
+
+	render() {
+		this.$el.html(this.template(this.model.toJSON()))
+	}
+})
+
+new AppView({
+	el: "#app",
+	model: new Backbone.Model({
+		title: "Wikipedia",
+		loading: false,
+		term: "bootcamp",
+		descending: false,
+		results: []
+	})
+})
+```
+
+**Advantages:**
+
+- Moved state to models so we can identify what state changes the app.
+- Moved creating UI into templates, one step closer to being declarative
+
+**Disadvantages:**
+
+- DOM Bombs
+  - kill focus for assistive devices
+  - non-performant
+
+- KVO Web
+  - can't predict what will happen if you change state
+    > Events complect communication and flow of control.
+    > ... their fundamental nature, ... is that upon an event
+    > an arbitrary amount of other code is run
+    > http://clojure.com/blog/2013/06/28/clojure-core-async-channels.html
+
+  - leads to cascading updates
+    - non-performant
+    - to fix leads to knowing how your app changes over time intimately
+
+- imperative composition
+  - non-performant
+  - to fix
+    - have to know how your app changes over time intimately
+    - lots of code to manage instances
+    - lots of mistakes
 
 ### Angular
 
@@ -209,3 +373,31 @@ app.directive("toggler", () => {
 	}
 })
 ```
+
+**Advantages:**
+
+- fully declarative templates
+- declarative component composition
+
+**Disadvantages:**
+
+- directives and filters are globals
+- have to think about time with $apply/$watch, etc.
+- rendering assumptions require you to keep object identity
+  and therefore think about time
+- and the real kicker: shared mutable state
+
+> July 7, 2014
+>
+> Vojta brought up some points that we don’t yet have plans to solve
+> some problems we see in larger apps.  In particular, how developers
+> can reason about data flow within an app.
+>
+> Key points: scope hierarchy is a huge pile of shared state that many
+> components from the application because of two way data-binding it's
+> not clear what how the data flows because it can flow in all
+> directions (including from child components to parents) - this makes
+> it hard to understand the app and understand of impact of model
+> changes in one part of the app on another (seemingly unrelated) part
+> of it.
+  https://twitter.com/teozaurus/status/518071391959388160
