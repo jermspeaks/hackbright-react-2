@@ -148,8 +148,7 @@ const appTemplate = _.template(`
 const AppView = Backbone.View.extend({
 	template: appTemplate,
 
-	events: {
-		// <-- delegated state changes
+	events: { // <-- delegated state changes
 		"submit #form": "handleSubmit",
 		"click #descending": "handleDescending"
 	},
@@ -174,8 +173,7 @@ const AppView = Backbone.View.extend({
 			descending: false // cascading update!
 		})
 		search(this.model.get("term"), (err, results) => {
-			this.model.set({
-				// KVO web
+			this.model.set({ // KVO web
 				loading: false,
 				results: results
 			})
@@ -183,8 +181,7 @@ const AppView = Backbone.View.extend({
 	},
 
 	handleDescending() {
-		this.model.set(
-			// <-- KVO web
+		this.model.set( // <-- KVO web
 			"descending",
 			!this.model.get("descending")
 		)
@@ -259,9 +256,9 @@ new AppView({
   - kill focus for assistive devices
   - non-performant
 
-- KVO Web
+- KVO (Key-Value Observing) Web
   - can't predict what will happen if you change state
-    > Events complect communication and flow of control.
+    > Events interweave communication and flow of control.
     > ... their fundamental nature, ... is that upon an event
     > an arbitrary amount of other code is run
     > http://clojure.com/blog/2013/06/28/clojure-core-async-channels.html
@@ -346,8 +343,7 @@ app.controller("MainController", function($rootScope) {
 	main.handleSubmit()
 })
 
-app.directive("toggler", () => {
-	// <-- Global!
+app.directive("toggler", () => { // <-- Global!
 	return {
 		restrict: "E", // WTH?
 		scope: {
@@ -387,22 +383,6 @@ app.directive("toggler", () => {
   and therefore think about time
 - and the real kicker: shared mutable state
 
-> July 7, 2014
->
-> Vojta brought up some points that we don’t yet have plans to solve
-> some problems we see in larger apps.  In particular, how developers
-> can reason about data flow within an app.
->
-> Key points: scope hierarchy is a huge pile of shared state that many
-> components from the application because of two way data-binding it's
-> not clear what how the data flows because it can flow in all
-> directions (including from child components to parents) - this makes
-> it hard to understand the app and understand of impact of model
-> changes in one part of the app on another (seemingly unrelated) part
-> of it.
-  https://twitter.com/teozaurus/status/518071391959388160
-
-
 ## Create React App
 
 > You don’t need to install or configure tools like Webpack or Babel.
@@ -413,10 +393,485 @@ app.directive("toggler", () => {
 >
 > -- From create-react-app library README
 
+### Converting to a Custom Setup
+
+> If you’re a power user and you aren’t happy with the default configuration, you can “eject” from the tool and use it as a boilerplate generator.
+
+> Running npm run eject copies all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. Commands like npm start and npm run build will still work, but they will point to the copied scripts so you can tweak them. At this point, you’re on your own.
+
+>
+> -- From create-react-app library README
 
 ## Compound Components
 
+```js
+import React from "react"
+import ReactDOM from "react-dom"
+import PropTypes from "prop-types"
+import * as styles from "./styles"
+
+class Tabs extends React.Component {
+  state = {
+    activeIndex: 0
+  }
+
+  selectTabIndex(activeIndex) {
+    this.setState({ activeIndex })
+  }
+
+  renderTabs() {
+    return this.props.data.map((tab, index) => {
+      const isActive = this.state.activeIndex === index
+      return (
+        <div
+          key={tab.label}
+          style={isActive ? styles.activeTab : styles.tab}
+          onClick={() => this.selectTabIndex(index)}
+        >
+          {tab.label}
+        </div>
+      )
+    })
+  }
+
+  renderPanel() {
+    const tab = this.props.data[this.state.activeIndex]
+    return <div>{tab.description}</div>
+  }
+
+  render() {
+    return (
+      <div>
+        <div style={styles.tabs}>{this.renderTabs()}</div>
+        <div style={styles.tabPanels}>{this.renderPanel()}</div>
+      </div>
+    )
+  }
+}
+
+class App extends React.Component {
+  render() {
+    const tabData = [
+      {
+        label: "Tacos",
+        description: <p>Tacos are delicious</p>
+      },
+      {
+        label: "Burritos",
+        description: <p>Sometimes a burrito is what you really need</p>
+      },
+      {
+        label: "Coconut Korma",
+        description: <p>Might be your best option</p>
+      }
+    ]
+
+    return (
+      <div>
+        <Tabs data={tabData} />
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById("app"))
+```
+
+What if I wanted tabs on the bottom?
+
+```js
+class Tabs extends React.Component {
+ static defaultProps = {
+   tabsPlacement: 'top'
+ }
+
+ state = {
+   activeIndex: 0
+ }
+
+ selectTabIndex(activeIndex) {
+   this.setState({ activeIndex })
+ }
+
+ renderTabs() {
+   return this.props.data.map((tab, index) => {
+     const isActive = this.state.activeIndex === index
+     return (
+       <div
+         key={tab.label}
+         style={isActive ? styles.activeTab : styles.tab}
+         onClick={() => this.selectTabIndex(index)}
+       >{tab.label}</div>
+     )
+   })
+ }
+
+ renderPanel() {
+   const tab = this.props.data[this.state.activeIndex]
+   return (
+     <div>
+       <p>{tab.description}</p>
+     </div>
+   )
+ }
+
+ render() {
+   const tabs = (
+     <div key="tabs" style={styles.tabs}>
+       {this.renderTabs()}
+     </div>
+   )
+   const panel = (
+     <div key="panel" style={styles.tabPanels}>
+       {this.renderPanel()}
+     </div>
+   )
+   return (
+     <div>
+       {this.props.tabsPlacement === 'top' ?
+         [tabs, panel] :
+         [panel, tabs]
+       }
+     </div>
+   )
+ }
+}
+
+class App extends React.Component {
+ render() {
+   const tabData = [
+     { label: 'Tacos',
+       description: <p>Tacos are delicious</p>
+     },
+     { label: 'Burritos',
+       description: <p>Sometimes a burrito is what you really need</p>
+     },
+     { label: 'Coconut Korma',
+       description: <p>Might be your best option</p>
+     }
+   ]
+
+   return (
+     <div>
+       <Tabs data={tabData} tabsPlacement="bottom"/>
+     </div>
+   )
+ }
+}
+
+ReactDOM.render(<App/>, document.getElementById('app'))
+```
+
+That wasn't too bad, but it added a lot of complexity for something that
+didn't seem to warrant that much of a change
+
+- render is less obvious
+- have to use keys, or wrap stuff in extra divs
+- adding another option that has to do with rendering will add even more
+  complexity
+
+---
+
+Lets add "disabled" to a tab, what does jQuery UI do?
+https://api.jqueryui.com/tabs/#option-disabled
+
+```js
+class Tabs extends React.Component {
+ static defaultProps = {
+   tabsPlacement: 'top',
+   disabled: []
+ }
+
+ state = {
+   activeIndex: 0
+ }
+
+ selectTabIndex(activeIndex) {
+   this.setState({ activeIndex })
+ }
+
+ renderTabs() {
+   return this.props.data.map((tab, index) => {
+     const isActive = this.state.activeIndex === index
+     const isDisabled = this.props.disabled.indexOf(index) !== -1
+     const props = {
+       key: tab.label,
+       style: isDisabled ? styles.disabledTab : (
+         isActive ? styles.activeTab : styles.tab
+       )
+     }
+     if (!isDisabled)
+       props.onClick = () => this.selectTabIndex(index)
+     return <div {...props}>{tab.label}</div>
+   })
+ }
+
+ renderPanel() {
+   const tab = this.props.data[this.state.activeIndex]
+   return (
+     <div>
+       <p>{tab.description}</p>
+     </div>
+   )
+ }
+
+ render() {
+   const tabs = (
+     <div key="tabs" style={styles.tabs}>
+       {this.renderTabs()}
+     </div>
+   )
+   const panel = (
+     <div key="panel" style={styles.tabPanels}>
+       {this.renderPanel()}
+     </div>
+   )
+   return (
+     <div>
+       {this.props.tabsPlacement === 'top' ?
+         [tabs, panel] :
+         [panel, tabs]
+       }
+     </div>
+   )
+ }
+}
+
+class App extends React.Component {
+ render() {
+   const tabData = [
+     { label: 'Tacos',
+       description: <p>Tacos are delicious</p>
+     },
+     { label: 'Burritos',
+       description: <p>Sometimes a burrito is what you really need</p>
+     },
+     { label: 'Coconut Korma',
+       description: <p>Might be your best option</p>
+     }
+   ]
+
+   return (
+     <div>
+       <Tabs
+         data={tabData}
+         tabsPlacement="top"
+         disabled={[ 1 ]}
+       />
+     </div>
+   )
+ }
+}
+
+ReactDOM.render(<App/>, document.getElementById('app'))
+```
+
+Feels weird ... whenever your options affect rendering, 
+its a great opportunity to create child components instead
+
+```js
+class TabList extends React.Component {
+ render() {
+   const children = React.Children.map(this.props.children, (child, index) => {
+     return React.cloneElement(child, {
+       isActive: index === this.props.activeIndex,
+       onClick: () => this.props.onActivate(index)
+     })
+   })
+
+   return <div style={styles.tabs}>{children}</div>
+ }
+}
+
+class Tab extends React.Component {
+ render() {
+   return (
+     <div
+       onClick={this.props.isDisabled ? null : this.props.onClick}
+       style={this.props.isDisabled ? styles.disabledTab : (
+         this.props.isActive ? styles.activeTab : styles.tab
+       )}
+     >
+       {this.props.children}
+     </div>
+   )
+ }
+}
+
+class TabPanels extends React.Component {
+ render() {
+   return (
+     <div style={styles.tabPanels}>
+       {this.props.children[this.props.activeIndex]}
+     </div>
+   )
+ }
+}
+
+class TabPanel extends React.Component {
+ render() {
+   return <div>{this.props.children}</div>
+ }
+}
+
+class Tabs extends React.Component {
+ state = {
+   activeIndex: 0
+ }
+
+ render() {
+   const children = React.Children.map(this.props.children, (child, index) => {
+     if (child.type === TabPanels) {
+       return React.cloneElement(child, {
+         activeIndex: this.state.activeIndex
+       })
+     } else if (child.type === TabList) {
+       return React.cloneElement(child, {
+         activeIndex: this.state.activeIndex,
+         onActivate: (activeIndex) => this.setState({ activeIndex })
+       })
+     } else {
+       return child
+     }
+   })
+
+   return <div>{children}</div>
+ }
+}
+
+class App extends React.Component {
+ render() {
+   return (
+     <div>
+       <Tabs>
+         <TabList>
+           <Tab>Tacos</Tab>
+           <Tab isDisabled>Burritos</Tab>
+           <Tab>Coconut Korma</Tab>
+         </TabList>
+
+         <TabPanels>
+           <TabPanel>
+             <p>Tacos are delicious</p>
+           </TabPanel>
+           <TabPanel>
+             <p>Sometimes a burrito is what you really need</p>
+           </TabPanel>
+           <TabPanel>
+             <p>Might be your best option</p>
+           </TabPanel>
+         </TabPanels>
+       </Tabs>
+     </div>
+   )
+ }
+}
+
+ReactDOM.render(<App/>, document.getElementById('app'))
+```
+
+Now this is really flexible
+
+- can change order of panels v. tabs
+- can pass in our own styles to tabs
+- can even have unrelated elements inside
+- in other words, we now have control over rendering while
+  Tabs handles the interaction
+
+Oh but you really loved the old tabs yeah?
+
+```js
+class DataTabs extends React.Component {
+ static defaultProps = {
+   disabled: []
+ }
+
+ render() {
+   return (
+     <Tabs>
+       <TabList>
+         {this.props.data.map((item, index) => (
+           <Tab key={item.label} disabled={this.props.disabled.indexOf(index) !== -1}>
+             {item.label}
+           </Tab>
+         ))}
+       </TabList>
+
+       <TabPanels>
+         {this.props.data.map((item) => (
+           <TabPanel key={item.label}>{item.description}</TabPanel>
+         ))}
+       </TabPanels>
+     </Tabs>
+   )
+ }
+}
+
+class App extends React.Component {
+ render() {
+   const tabData = [
+     { label: 'Tacos',
+       description: <p>Tacos are delicious</p>
+     },
+     { label: 'Burritos',
+       description: <p>Sometimes a burrito is what you really need</p>
+     },
+     { label: 'Coconut Korma',
+       description: <p>Might be your best option</p>
+     }
+   ]
+
+   return (
+     <div>
+       <DataTabs data={tabData}/>
+     </div>
+   )
+ }
+}
+
+ReactDOM.render(<App/>, document.getElementById('app'))
+```
+
+Instead of creating a handful of options, compose several components together
+and then compose them together into their own components.
+
+A really awesome library that does this is react-soundplayer
+
 ## Redux
+
+- REdux is an architecture, not a framework
+  - DO NOT START BUILDING STUFF WITH REDUX WHEN YOU'RE FIRST GETTING STARTED WITH REACT
+  - It can be difficult to understand why the patterns in Redux are useful if you haven't
+    already tried to solve problems w/out Redux
+  - You'll most likely hate Redux unless you're already fighting with your current JS
+    framework. If you're not, stick with what's working for you
+
+- Redux is good at:
+  - Making it easy to reason about changes to state
+
+- Remember our 2 questions:
+  - What state is there?
+  - When does it change?
+
+![Redux workflow](./subjects/Redux/Redux.png)
+
+- Views
+  - React components (see components)
+  - Create actions (see actions)
+
+- Actions
+  - Create "actions" with meaningful names (e.g. "load contacts", "delete contact").
+    These are the verbs. Ask yourself, "what actions can the user take?"
+  - Send actions through the dispatcher
+  - Possibly trigger API requests (side effect)
+
+- Store
+  - Synchronous dispatch of actions to ALL registered listeners (stores)
+
+- Reducers
+  - Compute new state values
+
+
 
 ## Resources
 

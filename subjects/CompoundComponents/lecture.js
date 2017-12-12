@@ -72,19 +72,19 @@ ReactDOM.render(<App />, document.getElementById("app"))
 ////////////////////////////////////////////////////////////////////////////////
 // What if I wanted tabs on the bottom?
 
-//class Tabs extends React.Component {
+// class Tabs extends React.Component {
 //  static defaultProps = {
 //    tabsPlacement: 'top'
 //  }
-//
+
 //  state = {
 //    activeIndex: 0
 //  }
-//
+
 //  selectTabIndex(activeIndex) {
 //    this.setState({ activeIndex })
 //  }
-//
+
 //  renderTabs() {
 //    return this.props.data.map((tab, index) => {
 //      const isActive = this.state.activeIndex === index
@@ -97,7 +97,7 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //      )
 //    })
 //  }
-//
+
 //  renderPanel() {
 //    const tab = this.props.data[this.state.activeIndex]
 //    return (
@@ -106,7 +106,7 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //      </div>
 //    )
 //  }
-//
+
 //  render() {
 //    const tabs = (
 //      <div key="tabs" style={styles.tabs}>
@@ -127,9 +127,9 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //      </div>
 //    )
 //  }
-//}
-//
-//class App extends React.Component {
+// }
+
+// class App extends React.Component {
 //  render() {
 //    const tabData = [
 //      { label: 'Tacos',
@@ -142,21 +142,21 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //        description: <p>Might be your best option</p>
 //      }
 //    ]
-//
+
 //    return (
 //      <div>
 //        <Tabs data={tabData} tabsPlacement="bottom"/>
 //      </div>
 //    )
 //  }
-//}
-//
-//ReactDOM.render(<App/>, document.getElementById('app'))
+// }
+
+// ReactDOM.render(<App/>, document.getElementById('app'))
 
 ////////////////////////////////////////////////////////////////////////////////
 // That wasn't too bad, but it added a lot of complexity for something that
 // didn't seem to warrant that much of a change
-//
+
 // - render is less obvious
 // - have to use keys, or wrap stuff in extra divs
 // - adding another option that has to do with rendering will add even more
@@ -166,20 +166,20 @@ ReactDOM.render(<App />, document.getElementById("app"))
 // Lets add "disabled" to a tab, what does jQuery UI do?
 // https://api.jqueryui.com/tabs/#option-disabled
 
-//class Tabs extends React.Component {
+// class Tabs extends React.Component {
 //  static defaultProps = {
 //    tabsPlacement: 'top',
 //    disabled: []
 //  }
-//
+
 //  state = {
 //    activeIndex: 0
 //  }
-//
+
 //  selectTabIndex(activeIndex) {
 //    this.setState({ activeIndex })
 //  }
-//
+
 //  renderTabs() {
 //    return this.props.data.map((tab, index) => {
 //      const isActive = this.state.activeIndex === index
@@ -195,7 +195,7 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //      return <div {...props}>{tab.label}</div>
 //    })
 //  }
-//
+
 //  renderPanel() {
 //    const tab = this.props.data[this.state.activeIndex]
 //    return (
@@ -204,7 +204,7 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //      </div>
 //    )
 //  }
-//
+
 //  render() {
 //    const tabs = (
 //      <div key="tabs" style={styles.tabs}>
@@ -225,9 +225,9 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //      </div>
 //    )
 //  }
-//}
-//
-//class App extends React.Component {
+// }
+
+// class App extends React.Component {
 //  render() {
 //    const tabData = [
 //      { label: 'Tacos',
@@ -240,7 +240,7 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //        description: <p>Might be your best option</p>
 //      }
 //    ]
-//
+
 //    return (
 //      <div>
 //        <Tabs
@@ -251,15 +251,15 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //      </div>
 //    )
 //  }
-//}
-//
-//ReactDOM.render(<App/>, document.getElementById('app'))
+// }
+
+// ReactDOM.render(<App/>, document.getElementById('app'))
 
 ////////////////////////////////////////////////////////////////////////////////
 // Feels weird ... whenever your options affect rendering, its a great
 // opportunity to create child components instead
 
-//class TabList extends React.Component {
+// class TabList extends React.Component {
 //  render() {
 //    const children = React.Children.map(this.props.children, (child, index) => {
 //      return React.cloneElement(child, {
@@ -267,12 +267,12 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //        onClick: () => this.props.onActivate(index)
 //      })
 //    })
-//
+
 //    return <div style={styles.tabs}>{children}</div>
 //  }
-//}
-//
-//class Tab extends React.Component {
+// }
+
+// class Tab extends React.Component {
 //  render() {
 //    return (
 //      <div
@@ -285,9 +285,9 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //      </div>
 //    )
 //  }
-//}
-//
-//class TabPanels extends React.Component {
+// }
+
+// class TabPanels extends React.Component {
 //  render() {
 //    return (
 //      <div style={styles.tabPanels}>
@@ -295,19 +295,19 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //      </div>
 //    )
 //  }
-//}
-//
-//class TabPanel extends React.Component {
+// }
+
+// class TabPanel extends React.Component {
 //  render() {
 //    return <div>{this.props.children}</div>
 //  }
-//}
-//
-//class Tabs extends React.Component {
+// }
+
+// class Tabs extends React.Component {
 //  state = {
 //    activeIndex: 0
 //  }
-//
+
 //  render() {
 //    const children = React.Children.map(this.props.children, (child, index) => {
 //      if (child.type === TabPanels) {
@@ -323,12 +323,12 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //        return child
 //      }
 //    })
-//
+
 //    return <div>{children}</div>
 //  }
-//}
-//
-//class App extends React.Component {
+// }
+
+// class App extends React.Component {
 //  render() {
 //    return (
 //      <div>
@@ -338,7 +338,7 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //            <Tab isDisabled>Burritos</Tab>
 //            <Tab>Coconut Korma</Tab>
 //          </TabList>
-//
+
 //          <TabPanels>
 //            <TabPanel>
 //              <p>Tacos are delicious</p>
@@ -354,26 +354,26 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //      </div>
 //    )
 //  }
-//}
-//
-//ReactDOM.render(<App/>, document.getElementById('app'))
+// }
+
+// ReactDOM.render(<App/>, document.getElementById('app'))
 
 ////////////////////////////////////////////////////////////////////////////////
 // Now this is really flexible
-//
+
 // - can change order of panels v. tabs
 // - can pass in our own styles to tabs
 // - can even have unrelated elements inside
 // - in other words, we now have control over rendering while
 //   Tabs handles the interaction
-//
+
 // Oh but you really loved the old tabs yeah?
 
-//class DataTabs extends React.Component {
+// class DataTabs extends React.Component {
 //  static defaultProps = {
 //    disabled: []
 //  }
-//
+
 //  render() {
 //    return (
 //      <Tabs>
@@ -384,7 +384,7 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //            </Tab>
 //          ))}
 //        </TabList>
-//
+
 //        <TabPanels>
 //          {this.props.data.map((item) => (
 //            <TabPanel key={item.label}>{item.description}</TabPanel>
@@ -393,9 +393,9 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //      </Tabs>
 //    )
 //  }
-//}
-//
-//class App extends React.Component {
+// }
+
+// class App extends React.Component {
 //  render() {
 //    const tabData = [
 //      { label: 'Tacos',
@@ -408,16 +408,16 @@ ReactDOM.render(<App />, document.getElementById("app"))
 //        description: <p>Might be your best option</p>
 //      }
 //    ]
-//
+
 //    return (
 //      <div>
 //        <DataTabs data={tabData}/>
 //      </div>
 //    )
 //  }
-//}
-//
-//ReactDOM.render(<App/>, document.getElementById('app'))
+// }
+
+// ReactDOM.render(<App/>, document.getElementById('app'))
 
 ////////////////////////////////////////////////////////////////////////////////
 // Instead of creating a handful of options, compose several components together
