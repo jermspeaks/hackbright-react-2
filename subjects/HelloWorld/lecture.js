@@ -5,7 +5,7 @@
 // <div>
 // 	<h1>Wikipedia</h1>
 // 	<form id="form">
-// 		<input id="input" value="taco"/>
+// 		<input id="input" value="bootcamp"/>
 // 		<button type="submit">Search</button>
 // 	</form>
 // 	<div id="loading">Loading...</div>
@@ -103,7 +103,7 @@
 // <div>
 // 	<h1><%= title %></h1>
 // 	<form id="form">
-// 		<input id="input" value="taco"/>
+// 		<input id="input" value="bootcamp"/>
 // 		<button type="submit">Search</button>
 // 	</form>
 // 	<% if (loading) { %>
@@ -223,7 +223,7 @@
 // 	model: new Backbone.Model({
 // 		title: "Wikipedia",
 // 		loading: false,
-// 		term: "tacos",
+// 		term: "bootcamp",
 // 		descending: false,
 // 		results: []
 // 	})
@@ -300,13 +300,13 @@ const app = angular.module("wikipedia", [])
 
 app.controller("MainController", function($rootScope) {
 	const main = this
-	main.term = "taco" // <-- shared state!
+	main.term = "bootcamp" // <-- shared state!
 	main.results = []
 	main.loading = false
 	main.descending = false
 
 	main.getFriends = () => {
-		return [{ name: "Ryan" }, { name: "Michael" }]
+		return [{ name: "Jeremy" }]
 	}
 
 	main.handleSubmit = () => {
