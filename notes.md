@@ -193,8 +193,7 @@ const AppView = Backbone.View.extend({
 			state.results = state.results.slice(0).reverse()
 		this.$el.html(this.template(state)) // DOM Bomb!
 		this.$el.find("#results li").each((index, el) => {
-			new ToggleView({
-				// <-- imperative (re)composition!
+			new ToggleView({ // <-- imperative (re)composition!
 				el: el,
 				model: new Backbone.Model(state.results[index])
 			}).render()
